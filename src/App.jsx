@@ -31,7 +31,7 @@ function App() {
         post: newItem.post,
         title: newItem.title,
         date: new Date(newItem.date),
-        id: Math.max(...items.map((el) => el.id)) + 1
+        id: items.length > 0 ? Math.max(...items.map((el) => el.id)) + 1 : 1
       }
     ]);
     // setItems((oldItems) => [
