@@ -1,4 +1,5 @@
 .input-title {
+  color: #fff;
   border: none;
   background: none;
   font-size: 32px;
@@ -11,6 +12,7 @@
 }
 
 .input {
+  color: #fff;
   border: none;
   background: none;
   font-size: 14px;

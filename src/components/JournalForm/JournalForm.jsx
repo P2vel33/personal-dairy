@@ -3,6 +3,7 @@ import Button from '../Button/Button';
 import styles from './JournalForm.module.css';
 import cn from 'classnames';
 import { formReducer, initialValue } from './JournalForm.state';
+import Input from '../Input/Input';
 
 function JournalForm({ onSubmit }) {
   const [formState, dispatchForm] = useReducer(formReducer, initialValue);
@@ -57,15 +58,14 @@ function JournalForm({ onSubmit }) {
   return (
     <form onSubmit={addJournalItem} className={cn(styles['journal-form'])}>
       <div className={cn(styles['form-row'])}>
-        <input
+        <Input
           type="text"
           name="title"
+          appearence="title"
           ref={titleRef}
           value={values.title}
-          className={cn(styles['input-title'], {
-            [styles['invalid']]: !isValid.title
-          })}
           onChange={onChange}
+          isValid={!isValid.title}
         />
         <img className="delete" src="/exit.svg" alt="Иконка удаления поста"></img>
       </div>
@@ -74,28 +74,14 @@ function JournalForm({ onSubmit }) {
           <img className="calendar" src="/calendar.svg" alt="Логотип календаря" />
           <span>Дата</span>
         </label>
-        <input
-          type="date"
-          name="date"
-          ref={dateRef}
-          onChange={onChange}
-          value={values.date}
-          className={cn(styles['input'], { [styles['invalid']]: !isValid.date })}
-        />
+        <Input type="date" name="date" ref={dateRef} onChange={onChange} value={values.date} isValid={!isValid.date} />
       </div>
       <div className={cn(styles['form-row'])}>
         <label htmlFor="tag" className={cn(styles['form-label'])}>
           <img className="tags" src="/tags.svg" alt="Логотип тэга" />
           <span>Метки</span>
         </label>
-        <input
-          type="text"
-          name="tag"
-          ref={tagRef}
-          onChange={onChange}
-          value={values.tag}
-          className={cn(styles['input'], { [styles['invalid']]: !isValid.tag })}
-        />
+        <Input type="text" name="tag" ref={tagRef} onChange={onChange} value={values.tag} isValid={!isValid.tag} />
       </div>
 
       <textarea
