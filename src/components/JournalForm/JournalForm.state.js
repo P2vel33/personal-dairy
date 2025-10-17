@@ -35,7 +35,7 @@ export function formReducer(state, action) {
       };
     }
     case 'CLEAR': {
-      return { ...state, values: initialValue.values };
+      return { ...state, values: initialValue.values, isFormReadyToSubmit: false };
     }
     case 'SET_VALUE': {
       return { ...state, values: { ...state.values, ...action.payload } };
