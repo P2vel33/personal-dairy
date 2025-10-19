@@ -8,6 +8,7 @@ import JournalForm from './components/JournalForm/JournalForm';
 import JournalItem from './components/JournalItem/JournalItem';
 import CardButton from './components/CardButton/CardButton';
 import { useEffect, useState } from 'react';
+import { useLocalStorage } from './hooks/use-localstorage.hook';
 // const initialItems = [
 //   {
 //     id: 1,
@@ -22,29 +23,41 @@ import { useEffect, useState } from 'react';
 //     date: new Date()
 //   }
 // ];
-function App() {
-  const [items, setItems] = useState([]);
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('data'));
-    if (data) {
-      setItems(
-        data.map((el) => ({
-          ...el,
-          date: new Date(el.date)
-        }))
-      );
-    }
-  }, []);
 
-  useEffect(() => {
-    if (items.length) {
-      localStorage.setItem('data', JSON.stringify(items));
-    }
-  }, [items]);
+function mapItems(items) {
+  if (!items) {
+    return [];
+  }
+  return items.map((i) => ({
+    ...i,
+    date: new Date(i.date)
+  }));
+}
+function App() {
+  const [items, setItems] = useLocalStorage('data');
+  console.log(items);
+  console.log(mapItems(items));
+  // useEffect(() => {
+  //   const data = JSON.parse(localStorage.getItem('data'));
+  //   if (data) {
+  //     setItems(
+  //       data.map((el) => ({
+  //         ...el,
+  //         date: new Date(el.date)
+  //       }))
+  //     );
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (items.length) {
+  //     localStorage.setItem('data', JSON.stringify(items));
+  //   }
+  // }, [items]);
 
   const addItems = (newItem) => {
     setItems([
-      ...items,
+      ...mapItems(items),
       {
         post: newItem.post,
         title: newItem.title,
@@ -67,7 +80,7 @@ function App() {
       <LeftPanel>
         <Header />
         <JournalAddButton />
-        <JournalList items={items} />
+        <JournalList items={mapItems(items)} />
       </LeftPanel>
       <Body>
         <JournalForm onSubmit={addItems} />
