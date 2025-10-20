@@ -24,8 +24,7 @@ function App() {
     setItems([
       ...mapItems(items),
       {
-        post: newItem.post,
-        title: newItem.title,
+        ...newItem,
         date: new Date(newItem.date),
         id: items.length > 0 ? Math.max(...items.map((el) => el.id)) + 1 : 1
       }

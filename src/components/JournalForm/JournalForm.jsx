@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useContext, useEffect, useId, useReducer, useRef, useState } from 'react';
 import Button from '../Button/Button';
 import styles from './JournalForm.module.css';
 import cn from 'classnames';
@@ -50,6 +50,9 @@ function JournalForm({ onSubmit }) {
     }
   }, [isFormReadyToSubmit, values, onSubmit]);
 
+  useEffect(() => {
+    dispatchForm({ type: 'SET_VALUE', payload: { userId } });
+  }, [userId]);
   const onChange = (e) => {
     dispatchForm({ type: 'SET_VALUE', payload: { [e.target.name]: e.target.value } });
   };
