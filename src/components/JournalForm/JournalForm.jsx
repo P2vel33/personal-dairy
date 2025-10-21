@@ -5,6 +5,7 @@ import cn from 'classnames';
 import { formReducer, initialValue } from './JournalForm.state';
 import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
+import { PostContext } from '../../context/post.context';
 
 function JournalForm({ onSubmit }) {
   const [formState, dispatchForm] = useReducer(formReducer, initialValue);
@@ -14,6 +15,7 @@ function JournalForm({ onSubmit }) {
   const postRef = useRef();
   const tagRef = useRef();
   const { userId } = useContext(UserContext);
+  const { currentPost } = useContext(PostContext);
 
   const focusError = () => {
     switch (true) {
@@ -33,6 +35,10 @@ function JournalForm({ onSubmit }) {
   };
 
   useEffect(() => {
+    dispatchForm({ type: 'SET_VALUE', payload: { ...currentPost } });
+  }, [currentPost]);
+
+  useEffect(() => {
     let timer;
     if (!isValid.date || !isValid.post || !isValid.tag || !isValid.title) {
       focusError(isValid);
@@ -47,12 +53,14 @@ function JournalForm({ onSubmit }) {
     if (isFormReadyToSubmit) {
       onSubmit(values);
       dispatchForm({ type: 'CLEAR' });
+      dispatchForm({ type: 'SET_VALUE', payload: { userId } });
     }
-  }, [isFormReadyToSubmit, values, onSubmit]);
+  }, [isFormReadyToSubmit, values, onSubmit, userId]);
 
   useEffect(() => {
     dispatchForm({ type: 'SET_VALUE', payload: { userId } });
   }, [userId]);
+
   const onChange = (e) => {
     dispatchForm({ type: 'SET_VALUE', payload: { [e.target.name]: e.target.value } });
   };
@@ -80,7 +88,14 @@ function JournalForm({ onSubmit }) {
           <img className="calendar" src="/calendar.svg" alt="Логотип календаря" />
           <span>Дата</span>
         </label>
-        <Input type="date" name="date" ref={dateRef} onChange={onChange} value={values.date} isValid={!isValid.date} />
+        <Input
+          type="date"
+          name="date"
+          ref={dateRef}
+          onChange={onChange}
+          value={values.date ? new Date(values.date).toISOString().slice(0, 10) : ''}
+          isValid={!isValid.date}
+        />
       </div>
       <div className={cn(styles['form-row'])}>
         <label htmlFor="tag" className={cn(styles['form-label'])}>

@@ -3,9 +3,11 @@ import CardButton from '../CardButton/CardButton';
 import JournalItem from '../JournalItem/JournalItem';
 import './JournalList.css';
 import { UserContext } from '../../context/user.context';
+import { PostContext } from '../../context/post.context';
 
 function JournalList({ items }) {
   const { userId } = useContext(UserContext);
+  const { setCurrentPost } = useContext(PostContext);
   const sortItems = (a, b) => {
     if (a.date < b.date) {
       return 1;
@@ -25,7 +27,7 @@ function JournalList({ items }) {
     <>
       {filteredItems.map((el) => {
         return (
-          <CardButton key={el.id}>
+          <CardButton key={el.id} onClick={() => setCurrentPost(el)}>
             <JournalItem title={el.title} post={el.post} date={el.date} />
           </CardButton>
         );
