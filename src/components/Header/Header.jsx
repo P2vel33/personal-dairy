@@ -8,9 +8,11 @@ import { useCallback, useState } from 'react';
 const logos = ['./logo.svg', './vite.svg'];
 function Header() {
   const [logoIndex, setLogoIndex] = useState(0);
+
   const toogleLogo = useCallback(() => {
     setLogoIndex((state) => Number(!Boolean(state)));
   }, []);
+
   return (
     <div className={cn(styles['header'])}>
       <Logo image={logos[logoIndex]} />

@@ -7,7 +7,7 @@ import Input from '../Input/Input';
 import { UserContext } from '../../context/user.context';
 import { PostContext } from '../../context/post.context';
 
-function JournalForm({ onSubmit }) {
+function JournalForm({ onSubmit, onDelete }) {
   const [formState, dispatchForm] = useReducer(formReducer, initialValue);
   const { isValid, isFormReadyToSubmit, values } = formState;
   const titleRef = useRef();
@@ -15,7 +15,7 @@ function JournalForm({ onSubmit }) {
   const postRef = useRef();
   const tagRef = useRef();
   const { userId } = useContext(UserContext);
-  const { currentPost } = useContext(PostContext);
+  const { currentPost, setCurrentPost } = useContext(PostContext);
 
   const focusError = () => {
     switch (true) {
@@ -35,8 +35,12 @@ function JournalForm({ onSubmit }) {
   };
 
   useEffect(() => {
+    if (!currentPost.id) {
+      dispatchForm({ type: 'CLEAR' });
+      dispatchForm({ type: 'SET_VALUE', payload: { userId } });
+    }
     dispatchForm({ type: 'SET_VALUE', payload: { ...currentPost } });
-  }, [currentPost]);
+  }, [currentPost, userId]);
 
   useEffect(() => {
     let timer;
@@ -68,9 +72,22 @@ function JournalForm({ onSubmit }) {
     e.preventDefault();
     dispatchForm({ type: 'SUBMIT' });
   };
+
+  const deleteJournalItem = () => {
+    onDelete(currentPost.id);
+    setCurrentPost({
+      title: '',
+      tag: '',
+      date: '',
+      post: ''
+    });
+    dispatchForm({ type: 'CLEAR' });
+    dispatchForm({ type: 'SET_VALUE', payload: { userId } });
+  };
+
   return (
     <form onSubmit={addJournalItem} className={cn(styles['journal-form'])}>
-      {userId}
+      {/* {userId} */}
       <div className={cn(styles['form-row'])}>
         <Input
           type="text"
@@ -81,7 +98,11 @@ function JournalForm({ onSubmit }) {
           onChange={onChange}
           isValid={!isValid.title}
         />
-        <img className="delete" src="/exit.svg" alt="Иконка удаления поста"></img>
+        {currentPost?.id && (
+          <button className={cn(styles['delete'])} onClick={deleteJournalItem}>
+            <img className="delete" src="/exit.svg" alt="Иконка удаления поста"></img>
+          </button>
+        )}
       </div>
       <div className={cn(styles['form-row'])}>
         <label htmlFor="date" className={cn(styles['form-label'])}>

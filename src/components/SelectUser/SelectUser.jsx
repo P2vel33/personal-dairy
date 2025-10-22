@@ -9,6 +9,7 @@ function SelectUser() {
   function changeUser(e) {
     setUserId(Number(e.target.value));
   }
+
   return (
     <select name="user" id="user" value={userId} onChange={changeUser} className={cn(styles['select'])}>
       <option value="1">Антон</option>
